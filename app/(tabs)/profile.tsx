@@ -3,15 +3,13 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import React from 'react';
 
-import {
-  StyleSheet
-} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default function Index() {
   return (
     <ThemedView style={styles.container}>
       <ThemedText type="title">Welcome!</ThemedText>
-      <HelloWave />      
+      <HelloWave />    
     </ThemedView>
   );
 }
@@ -20,11 +18,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 20,
-  },
-  textInput: {
-    padding: 16,
-    borderWidth: 1,
-    borderRadius: 4
+    alignItems: 'center',
   },
 });

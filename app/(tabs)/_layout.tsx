@@ -14,44 +14,46 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        animation: 'shift', 
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
+            // Use um fundo transparente no iOS para o efeito de desfoque
             position: 'absolute',
           },
           default: {},
         }),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house" color={color} />,
+          tabBarIcon: ({ color, size }) => <IconSymbol size={size} name="house" color={color} />,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
           title: 'Carrinho',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="cart" color={color} />,
+          tabBarIcon: ({ color, size }) => <IconSymbol size={size} name="cart" color={color} />,
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: 'Histórico',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="chart.bar" color={color} />,
+          tabBarIcon: ({ color, size }) => <IconSymbol size={size} name="chart.bar" color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Perfil',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person" color={color} />,
+          tabBarIcon: ({ color, size }) => <IconSymbol size={size} name="person" color={color} />,
         }}
       />
     </Tabs>
