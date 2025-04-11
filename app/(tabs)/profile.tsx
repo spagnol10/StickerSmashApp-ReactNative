@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Image, TextInput, TouchableOpacity, Alert, View } from 'react-native';
+import { StyleSheet, Image, TextInput, TouchableOpacity, Alert, View, useColorScheme } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -7,6 +7,7 @@ import CustomButton from '@/components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import CustomIcon from '@/components/CustomIcon';
 import { Ionicons } from '@expo/vector-icons';
+import InputWithIcon from '@/components/InputWithIcon';
 
 const API_URL = 'http://localhost:8080/users';
 const USER_EMAIL = 'theo@gmail.com';
@@ -92,61 +93,63 @@ export default function ProfileScreen() {
       {/* Header com ícones */}
       <View style={styles.header}>
         <TouchableOpacity onPress={goBack}>
-          <CustomIcon name="arrow-back" size={24} />
+          <CustomIcon name="arrow-back-outline" size={24} />
         </TouchableOpacity>
+        <ThemedText>Olá {user.name}</ThemedText>
         <TouchableOpacity onPress={openNotifications}>
-          <CustomIcon name="notifications" size={24} />
+          <CustomIcon name="notifications-outline" size={24} />
         </TouchableOpacity>
       </View>
+
+
 
       {/* Avatar */}
-      <TouchableOpacity onPress={handleImagePick}>
-        <Image source={{ uri: user.avatar }} style={styles.avatar} />
-      </TouchableOpacity>
-      <Ionicons onPress={handleImagePick} name="download" size={20} color="black" />
+      <View style={styles.up}>
+        <TouchableOpacity onPress={handleImagePick}>
+          <Image source={{ uri: user.avatar }} style={styles.avatar} />
+        </TouchableOpacity>
+        <Ionicons
+          onPress={handleImagePick}
+          name="download-outline"
+          size={20}
+          color="gray" />
+      </View>
 
       {/* Inputs */}
-      <View style={styles.inputContainer}>
-        <ThemedText style={styles.label} type="default">Nome</ThemedText>
-        <TextInput
-          style={styles.input}
-          value={user.name}
-          onChangeText={(text) => setUser({ ...user, name: text })}
-          placeholder="Nome"
-        />
-      </View>
+      <InputWithIcon
+        label="Nome"
+        value={user.name}
+        onChangeText={(text) => setUser({ ...user, name: text })}
+        placeholder="Nome"
+        iconName="person-outline"
+      />
 
-      <View style={styles.inputContainer}>
-        <ThemedText style={styles.label} type="default">Email</ThemedText>
-        <TextInput
-          style={styles.input}
-          value={user.phone}
-          onChangeText={(text) => setUser({ ...user, phone: text })}
-          placeholder="Telefone"
-          keyboardType="phone-pad"
-        />
-      </View>
+      <InputWithIcon
+        label="Email"
+        value={user.email}
+        placeholder="E-mail"
+        iconName="mail-outline"
+        editable={false}
+        keyboardType="email-address"
+      />
 
-      <View style={styles.inputContainer}>
-        <ThemedText style={styles.label} type="default">Phone</ThemedText>
-        <TextInput
-          style={styles.input}
-          value={user.email}
-          editable={false}
-          placeholder="E-mail"
-        />
-      </View>
+      <InputWithIcon
+        label="Phone"
+        value={user.phone}
+        placeholder="Phone"
+        iconName="call-outline"
+        editable={false}
+        keyboardType="phone-pad"
+      />
 
-      <View style={styles.inputContainer}>
-        <ThemedText style={styles.label} type="default">Password</ThemedText>
-        <TextInput
-          style={styles.input}
-          value={user.password}
-          onChangeText={(text) => setUser({ ...user, password: text })}
-          placeholder="Senha"
-          secureTextEntry
-        />
-      </View>
+      <InputWithIcon
+        label="Password"
+        value={user.password}
+        onChangeText={(text) => setUser({ ...user, password: text })}
+        placeholder="Senha"
+        iconName="lock-closed-outline"
+        secureTextEntry
+      />
 
       {/* Botão de Salvar */}
       <CustomButton title="Salvar" onPress={handleSave} />
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    top: 40,
+    top: 60,
     left: 20,
     right: 20,
     flexDirection: 'row',
@@ -181,21 +184,10 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: 'gray',
   },
-  inputContainer: {
-    width: '100%',
-    marginBottom: 16, // Espaçamento entre os campos
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5, // Espaço entre o label e o input
-  },
-  input: {
-    width: '100%',
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    fontSize: 16,
+  up: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    marginBottom: 20,
   },
 });
