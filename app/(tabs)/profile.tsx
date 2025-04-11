@@ -123,7 +123,7 @@ export default function ProfileScreen() {
         value={user.email}
         placeholder="E-mail"
         iconName="mail-outline"
-        editable={false}
+        // editable={false}
         keyboardType="email-address"
       />
 
@@ -132,7 +132,7 @@ export default function ProfileScreen() {
         value={user.phone}
         placeholder="Phone"
         iconName="call-outline"
-        editable={false}
+        // editable={false}
         keyboardType="phone-pad"
       />
 
@@ -146,7 +146,10 @@ export default function ProfileScreen() {
       />
 
       {/* Botão de Salvar */}
-      <CustomButton title="Salvar" onPress={handleSave} />
+      <View style={{ width: '100%' }}>
+        <CustomButton title="Salvar" onPress={handleSave} />
+      </View>
+
     </ThemedView>
   );
 }
@@ -172,4 +175,5 @@ const styles = StyleSheet.create({
     marginTop: -100,
     alignSelf: "center",
   },
+
 });
