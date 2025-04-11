@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import CustomIcon from '@/components/CustomIcon';
 import { Ionicons } from '@expo/vector-icons';
 import InputWithIcon from '@/components/InputWithIcon';
+import Header from '@/components/Header';
 
 const API_URL = 'http://localhost:8080/users';
 const USER_EMAIL = 'theo@gmail.com';
@@ -90,29 +91,22 @@ export default function ProfileScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      {/* Header com ícones */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={goBack}>
-          <CustomIcon name="arrow-back-outline" size={24} />
-        </TouchableOpacity>
-        <ThemedText>Olá {user.name}</ThemedText>
-        <TouchableOpacity onPress={openNotifications}>
-          <CustomIcon name="notifications-outline" size={24} />
-        </TouchableOpacity>
-      </View>
 
-
+      {/* Header*/}
+      <Header
+        userName={user.name}
+        onBackPress={goBack}
+        onNotificationsPress={openNotifications} />
 
       {/* Avatar */}
-      <View style={styles.up}>
+      <View style={styles.header}>
         <TouchableOpacity onPress={handleImagePick}>
-          <Image source={{ uri: user.avatar }} style={styles.avatar} />
+          {user.avatar ? (
+            <Image source={{ uri: user.avatar }} style={styles.avatar} />
+          ) : (
+            <Ionicons name="person-circle-outline" size={100} color="white" style={styles.avatar} />
+          )}
         </TouchableOpacity>
-        <Ionicons
-          onPress={handleImagePick}
-          name="download-outline"
-          size={20}
-          color="gray" />
       </View>
 
       {/* Inputs */}
@@ -164,30 +158,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-  header: {
-    position: 'absolute',
-    top: 60,
-    left: 20,
-    right: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: 10,
-    backgroundColor: '#ccc'
+    alignSelf: "center",
   },
-  edit: {
-    color: 'white',
-    backgroundColor: 'gray',
-  },
-  up: {
+  header: {
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
     marginBottom: 20,
+    marginTop: -100,
+    alignSelf: "center",
   },
 });

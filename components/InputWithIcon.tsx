@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TextInput, StyleSheet, Text } from "react-native";
+import { View, TextInput, StyleSheet, Text, useColorScheme } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 interface InputWithIconProps {
@@ -23,20 +23,30 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({
   editable = true,
   keyboardType = "default",
 }) => {
+  const theme = useColorScheme(); // Obtém o tema atual (light/dark)
+
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={styles.inputWrapper}>
+      <Text style={[styles.label, theme === "dark" && styles.labelDark]}>{label}</Text>
+      <View style={[styles.inputWrapper, theme === "dark" && styles.inputWrapperDark]}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, theme === "dark" && styles.inputDark]}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
+          placeholderTextColor={theme === "dark" ? "#888" : "#555"}
           secureTextEntry={secureTextEntry}
           editable={editable}
           keyboardType={keyboardType}
         />
-        {value === "" && <Ionicons name={iconName} size={20} color="gray" style={styles.icon} />}
+        {value === "" && (
+          <Ionicons
+            name={iconName}
+            size={20}
+            color={theme === "dark" ? "white" : "black"}
+            style={styles.icon}
+          />
+        )}
       </View>
     </View>
   );
@@ -44,13 +54,17 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({
 
 const styles = StyleSheet.create({
   inputContainer: {
-    width: '100%',
+    width: "100%",
     marginBottom: 15,
   },
   label: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
+    color: "black",
+  },
+  labelDark: {
+    color: "white",
   },
   inputWrapper: {
     flexDirection: "row",
@@ -59,10 +73,19 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 8,
     paddingHorizontal: 10,
+    backgroundColor: "white",
+  },
+  inputWrapperDark: {
+    borderColor: "#444",
+    backgroundColor: "#222",
   },
   input: {
     flex: 1,
     height: 40,
+    color: "black",
+  },
+  inputDark: {
+    color: "white",
   },
   icon: {
     marginLeft: 10,
