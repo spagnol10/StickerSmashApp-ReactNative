@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Image, TextInput, TouchableOpacity, Alert, Button, View } from 'react-native';
+import { StyleSheet, Image, TextInput, TouchableOpacity, Alert, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import CustomButton from '@/components/CustomButton';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import CustomIcon from '@/components/CustomIcon';
+import { Ionicons } from '@expo/vector-icons';
 
 const API_URL = 'http://localhost:8080/users';
 const USER_EMAIL = 'theo@gmail.com';
@@ -75,17 +76,26 @@ export default function ProfileScreen() {
       .catch(error => Alert.alert('Erro', error.message));
   };
 
+  const openNotifications = () => {
+    // Lógica para abrir notificações
+    Alert.alert("Notificações", "Abrindo notificações...");
+  };
+
+  const goBack = () => {
+    navigation.goBack();
+  };
+
   if (loading) return <ThemedText type="title">Carregando...</ThemedText>;
 
   return (
     <ThemedView style={styles.container}>
-      
+      {/* Header com ícones */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={30} color="black" />
+        <TouchableOpacity onPress={goBack}>
+          <CustomIcon name="arrow-back" size={24} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => Alert.alert('Notificações', 'Você clicou no ícone de notificações!')}>
-          <Ionicons name="notifications" size={30} color="black" />
+        <TouchableOpacity onPress={openNotifications}>
+          <CustomIcon name="notifications" size={24} />
         </TouchableOpacity>
       </View>
 
@@ -93,39 +103,53 @@ export default function ProfileScreen() {
       <TouchableOpacity onPress={handleImagePick}>
         <Image source={{ uri: user.avatar }} style={styles.avatar} />
       </TouchableOpacity>
-      <ThemedText type="subtitle">Clique na foto para alterar</ThemedText>
+      <Ionicons onPress={handleImagePick} name="download" size={20} color="black" />
 
       {/* Inputs */}
-      <TextInput
-        style={styles.input}
-        value={user.name}
-        onChangeText={(text) => setUser({ ...user, name: text })}
-        placeholder="Nome"
-      />
-      <TextInput
-        style={styles.input}
-        value={user.email}
-        editable={false}
-        placeholder="E-mail"
-      />
-      <TextInput
-        style={styles.input}
-        value={user.phone}
-        onChangeText={(text) => setUser({ ...user, phone: text })}
-        placeholder="Telefone"
-        keyboardType="phone-pad"
-      />
-      <TextInput
-        style={styles.input}
-        value={user.password}
-        onChangeText={(text) => setUser({ ...user, password: text })}
-        placeholder="Senha"
-        secureTextEntry
-      />
+      <View style={styles.inputContainer}>
+        <ThemedText style={styles.label} type="default">Nome</ThemedText>
+        <TextInput
+          style={styles.input}
+          value={user.name}
+          onChangeText={(text) => setUser({ ...user, name: text })}
+          placeholder="Nome"
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <ThemedText style={styles.label} type="default">Email</ThemedText>
+        <TextInput
+          style={styles.input}
+          value={user.phone}
+          onChangeText={(text) => setUser({ ...user, phone: text })}
+          placeholder="Telefone"
+          keyboardType="phone-pad"
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <ThemedText style={styles.label} type="default">Phone</ThemedText>
+        <TextInput
+          style={styles.input}
+          value={user.email}
+          editable={false}
+          placeholder="E-mail"
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <ThemedText style={styles.label} type="default">Password</ThemedText>
+        <TextInput
+          style={styles.input}
+          value={user.password}
+          onChangeText={(text) => setUser({ ...user, password: text })}
+          placeholder="Senha"
+          secureTextEntry
+        />
+      </View>
 
       {/* Botão de Salvar */}
       <CustomButton title="Salvar" onPress={handleSave} />
-
     </ThemedView>
   );
 }
@@ -139,7 +163,7 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    top: 50,
+    top: 40,
     left: 20,
     right: 20,
     flexDirection: 'row',
@@ -151,15 +175,27 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     marginBottom: 10,
-    marginTop: 10, 
+    backgroundColor: '#ccc'
+  },
+  edit: {
+    color: 'white',
+    backgroundColor: 'gray',
+  },
+  inputContainer: {
+    width: '100%',
+    marginBottom: 16, // Espaçamento entre os campos
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5, // Espaço entre o label e o input
   },
   input: {
     width: '100%',
-    padding: 10,
-    marginVertical: 8,
+    padding: 12,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 5,
+    borderRadius: 8,
+    fontSize: 16,
   },
 });
-
