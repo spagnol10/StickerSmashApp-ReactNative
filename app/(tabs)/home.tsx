@@ -1,35 +1,25 @@
-import React, { useState, useEffect } from "react";
+import Header from "@/components/Header";
+import { mockProducts, Product } from "@/mock/mockProducts";
+import { mockUser } from "@/mock/mockUser";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
   ActivityIndicator,
   Alert,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Tabs } from "expo-router";
-import Header from "@/components/Header";
-import { useNavigation } from "@react-navigation/native";
 
-
-// Tipagem do produto vindo da API
-type Product = {
-  id?: string;
-  name: string;
-  price: string;
-  imageBase64: string; // URL ou base64
-};
-
-// Componente do ícone da tab bar
 function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>["name"]; color: string }) {
   return <FontAwesome size={18} style={{ marginBottom: -3 }} {...props} />;
 }
 
-// Cartão de produto
 const ProductCard = ({ product }: { product: Product }) => (
   <View style={styles.productCard}>
     <Image source={{ uri: product.imageBase64 }} style={styles.productImage} />
@@ -38,18 +28,23 @@ const ProductCard = ({ product }: { product: Product }) => (
   </View>
 );
 
+const API_URL = "http://localhost:8080/products";
+
 export default function HomeScreen() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
+  const [user] = useState(mockUser);
+
   const fetchProducts = async () => {
     try {
-      const response = await fetch("http://localhost:8080/products");
+      const response = await fetch(API_URL);
       const data = await response.json();
       setProducts(data);
     } catch (error) {
-      console.error("Erro ao buscar produtos:", error);
+      console.error("Erro ao buscar produtos da API, usando mock:", error);
+      setProducts(mockProducts);
     } finally {
       setLoading(false);
     }
@@ -59,7 +54,6 @@ export default function HomeScreen() {
     fetchProducts();
   }, []);
 
-  // Funções do header
   const openNotifications = () => {
     Alert.alert("Notificações", "Abrindo notificações...");
   };
@@ -70,14 +64,12 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header com ícones */}
-      <Header userName="João" onBackPress={openMenu} onNotificationsPress={openNotifications} />
+      {/* Usa nome do mockUser no header */}
+      <Header userName={user.name} onBackPress={openMenu} onNotificationsPress={openNotifications} />
 
-      {/* Conteúdo da Home */}
       <View style={{ marginTop: 100 }}>
         <Text style={styles.title}>Delicious food for you</Text>
 
-        {/* Cartão de Desconto */}
         <View style={styles.discountCard}>
           <View>
             <Text style={styles.discountText}>A special discount</Text>
@@ -86,25 +78,21 @@ export default function HomeScreen() {
           <Image source={require("@/assets/images/logo.png")} style={styles.discountImage} />
         </View>
 
-        {/* Botão de Voucher */}
         <TouchableOpacity style={styles.voucherButton}>
           <Text style={styles.voucherButtonText}>Claim voucher</Text>
         </TouchableOpacity>
 
-        {/* Barra de Pesquisa */}
         <View style={styles.searchContainer}>
           <FontAwesome name="search" size={18} color="#888" />
           <TextInput placeholder="Search..." style={styles.searchInput} />
         </View>
 
-        {/* Categorias */}
         <View style={styles.categories}>
           <Text style={styles.category}>Fruits</Text>
           <Text style={styles.category}>Vegetables</Text>
           <Text style={styles.category}>Fairs</Text>
         </View>
 
-        {/* Lista de Produtos */}
         {loading ? (
           <ActivityIndicator size="large" color="#00D361" style={{ marginTop: 20 }} />
         ) : (
@@ -114,10 +102,10 @@ export default function HomeScreen() {
             keyExtractor={(item, index) => item.id?.toString() || index.toString()}
             horizontal
             contentContainerStyle={styles.productList}
+            ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
           />
         )}
       </View>
-
     </View>
   );
 }
@@ -125,7 +113,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20, 
+    paddingTop: 20,
     paddingHorizontal: 16,
     backgroundColor: "#fff",
   },

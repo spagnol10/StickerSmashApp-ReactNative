@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Image, TextInput, TouchableOpacity, Alert, View, useColorScheme } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import CustomButton from '@/components/CustomButton';
+import Header from '@/components/Header';
+import InputWithIcon from '@/components/InputWithIcon';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import CustomButton from '@/components/CustomButton';
-import { useNavigation } from '@react-navigation/native';
-import CustomIcon from '@/components/CustomIcon';
 import { Ionicons } from '@expo/vector-icons';
-import InputWithIcon from '@/components/InputWithIcon';
-import Header from '@/components/Header';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
+import React, { useEffect, useState } from 'react';
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const API_URL = 'http://localhost:8080/users';
-const USER_EMAIL = 'theo@gmail.com';
+
+import { mockUser } from "../../mock/mockUser";
 
 export default function ProfileScreen() {
   const [user, setUser] = useState({
@@ -24,8 +24,26 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
+  const handleLogout = () => {
+    Alert.alert("Sair", "Você deseja sair do app?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Sair",
+        style: "destructive",
+        onPress: () => {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'Login' }],
+            })
+          );
+        },
+      },
+    ]);
+  };  
+
   useEffect(() => {
-    fetch(`${API_URL}/${USER_EMAIL}`)
+    fetch(`${API_URL}/${user.email}`)
       .then(response => response.json())
       .then(data => {
         setUser({
@@ -38,7 +56,8 @@ export default function ProfileScreen() {
         setLoading(false);
       })
       .catch(error => {
-        console.error('Erro ao buscar usuário:', error);
+        console.error('Erro ao buscar usuário, usando mock:', error);
+        setUser(mockUser);
         setLoading(false);
       });
   }, []);
@@ -79,7 +98,6 @@ export default function ProfileScreen() {
   };
 
   const openNotifications = () => {
-    // Lógica para abrir notificações
     Alert.alert("Notificações", "Abrindo notificações...");
   };
 
@@ -92,13 +110,11 @@ export default function ProfileScreen() {
   return (
     <ThemedView style={styles.container}>
 
-      {/* Header*/}
       <Header
         userName={user.name}
         onBackPress={goBack}
         onNotificationsPress={openNotifications} />
 
-      {/* Avatar */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleImagePick}>
           {user.avatar ? (
@@ -109,7 +125,6 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Inputs */}
       <InputWithIcon
         label="Nome"
         value={user.name}
@@ -145,11 +160,13 @@ export default function ProfileScreen() {
         secureTextEntry
       />
 
-      {/* Botão de Salvar */}
-      <View style={{ width: '100%' }}>
+      <View style={{ width: '100%', marginTop: 20 }}>
         <CustomButton title="Salvar" onPress={handleSave} />
       </View>
 
+      <View style={{ width: '100%', marginTop: 20 }}>
+        <CustomButton title="Sair" onPress={handleLogout} />
+      </View>
     </ThemedView>
   );
 }
@@ -175,5 +192,4 @@ const styles = StyleSheet.create({
     marginTop: -100,
     alignSelf: "center",
   },
-
 });
