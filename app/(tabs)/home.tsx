@@ -4,6 +4,7 @@ import { mockUser } from "@/mock/mockUser";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
 import {
   ActivityIndicator,
   Alert,
@@ -20,12 +21,12 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>["nam
   return <FontAwesome size={18} style={{ marginBottom: -3 }} {...props} />;
 }
 
-const ProductCard = ({ product }: { product: Product }) => (
-  <View style={styles.productCard}>
+const ProductCard = ({ product, onPress }: { product: Product; onPress: () => void }) => (
+  <TouchableOpacity onPress={onPress} style={styles.productCard}>
     <Image source={{ uri: product.imageBase64 }} style={styles.productImage} />
     <Text style={styles.productName}>{product.name}</Text>
     <Text style={styles.productPrice}>{product.price}</Text>
-  </View>
+  </TouchableOpacity>
 );
 
 const API_URL = "http://localhost:8080/products";
@@ -34,6 +35,7 @@ export default function HomeScreen() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+  const router = useRouter();
 
   const [user] = useState(mockUser);
 
@@ -98,7 +100,12 @@ export default function HomeScreen() {
         ) : (
           <FlatList
             data={products}
-            renderItem={({ item }) => <ProductCard product={item} />}
+            renderItem={({ item }) => (
+              <ProductCard
+                product={item}
+                onPress={() => router.push("/(tabs)/carrinho")}
+              />
+            )}
             keyExtractor={(item, index) => item.id?.toString() || index.toString()}
             horizontal
             contentContainerStyle={styles.productList}

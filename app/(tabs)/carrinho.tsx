@@ -8,6 +8,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 const product = {
   name: "Banana",
@@ -18,11 +19,24 @@ const product = {
 
 export default function ProductDetailScreen() {
   const [quantity, setQuantity] = useState(2);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const router = useRouter();
 
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const total = (product.price * quantity).toFixed(2);
+
+  const handleAddToCart = () => {
+    // Aqui você pode adicionar o item ao carrinho real
+    setShowCheckout(true); // Exibe o botão "Finalizar Compra"
+  };
+
+  const handleCheckout = () => {
+    // Aqui você pode navegar para a tela de checkout ou fazer alguma ação
+    alert("Ir para o checkout");
+    router.push("/pagamento");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -53,13 +67,18 @@ export default function ProductDetailScreen() {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.addToCartButton}>
+          <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
             <Text style={styles.addToCartText}>Add To Cart</Text>
             <Text style={styles.totalPrice}>R${total}</Text>
           </TouchableOpacity>
         </View>
-      </View>
 
+        {showCheckout && (
+          <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
+            <Text style={styles.checkoutText}>Finalizar Compra</Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </SafeAreaView>
   );
 }
@@ -165,5 +184,17 @@ const styles = StyleSheet.create({
     borderTopColor: "#ddd",
     borderTopWidth: 1,
     backgroundColor: "#fff",
+  },
+  checkoutButton: {
+    backgroundColor: "#FF6F00",
+    marginTop: 16,
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  checkoutText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });

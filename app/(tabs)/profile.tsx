@@ -12,6 +12,7 @@ import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 const API_URL = 'http://localhost:8080/users';
 
 import { mockUser } from "../../mock/mockUser";
+import { useRouter } from 'expo-router';
 
 export default function ProfileScreen() {
   const [user, setUser] = useState({
@@ -23,6 +24,7 @@ export default function ProfileScreen() {
   });
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+  const router = useRouter();
 
   const handleLogout = () => {
     Alert.alert("Sair", "Você deseja sair do app?", [
@@ -30,14 +32,7 @@ export default function ProfileScreen() {
       {
         text: "Sair",
         style: "destructive",
-        onPress: () => {
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{ name: 'Login' }],
-            })
-          );
-        },
+        onPress: () => router.push("/hello"),
       },
     ]);
   };  
