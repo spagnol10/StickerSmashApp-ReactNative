@@ -15,7 +15,10 @@ const ordersData = [
     date: "Qua. 21 Agosto 2024",
     store: "Nome do lugar - 01",
     orderNumber: "2367",
-    items: [{ name: "Banana", quantity: 1 }],
+    items: [
+      { name: "Banana", quantity: 1 },
+      { name: "Banana Caturra", quantity: 4 },
+    ],
   },
   {
     id: "2",
@@ -85,11 +88,11 @@ export default function OrdersHistoryScreen() {
     <View style={styles.container}>
       <View style={styles.headerTop}>
         <Ionicons name="arrow-back" size={24} color="#000" />
-        <Text style={styles.headerTitle}>My orders</Text>
+        {/* <Text style={styles.headerTitle}>My orders</Text> */}
         <View style={{ width: 24 }} /> {/* Placeholder para centralizar o título */}
       </View>
 
-      <Text style={styles.dateText}>Qua. 21 Agosto 2024</Text>
+      {/* <Text style={styles.dateText}>Qua. 21 Agosto 2024</Text> */}
 
       <FlatList
         data={ordersData}

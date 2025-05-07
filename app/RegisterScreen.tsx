@@ -30,32 +30,32 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState<string>("");
   const [agreeTerms, setAgreeTerms] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-    const router = useRouter();
+  const router = useRouter();
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const handleRegister = async () => {
     if (!fullName || !email || !phone || !password) {
-      Alert.alert("Validation", "Please fill in all fields.");
+      Alert.alert("Validação", "Por favor, preencha todos os campos.");
       return;
     }
 
     if (!agreeTerms) {
-      Alert.alert("Validation", "You must agree to the Terms and Conditions.");
+      Alert.alert("Validação", "Você deve concordar com os Termos e Condições.");
       return;
     }
 
     try {
       setLoading(true);
       const response = await mockRegister({ fullName, email, phone, password });
-      Alert.alert("Success", response.message, [
+      Alert.alert("Sucesso", response.message, [
         {
           text: "OK",
           onPress: () => navigation.replace("Home"),
         },
       ]);
     } catch (error: any) {
-      Alert.alert("Error", error.message || "Something went wrong.");
+      Alert.alert("Erro", error.message || "Algo deu errado.");
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ export default function RegisterScreen() {
       />
 
       <Text style={styles.title}>Registre-se</Text>
-      <Text style={styles.subtitle}>Crie sua conta grátis.</Text>
+      <Text style={styles.subtitle}>Crie sua conta gratuitamente.</Text>
 
       <View style={styles.inputContainer}>
         <FontAwesome name="user" size={20} color="#888" />
@@ -88,7 +88,7 @@ export default function RegisterScreen() {
         <FontAwesome name="envelope" size={20} color="#888" />
         <TextInput
           style={styles.input}
-          placeholder="Email válido"
+          placeholder="E-mail válido"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -101,7 +101,7 @@ export default function RegisterScreen() {
         <FontAwesome name="phone" size={20} color="#888" />
         <TextInput
           style={styles.input}
-          placeholder="Numero de telefone"
+          placeholder="Número de telefone"
           value={phone}
           onChangeText={setPhone}
           keyboardType="phone-pad"
@@ -123,7 +123,7 @@ export default function RegisterScreen() {
 
       <View style={styles.checkboxRow}>
         <BouncyCheckbox
-          size={18}
+          size={14}
           fillColor="#008066"
           unFillColor="#FFF"
           iconStyle={{ borderColor: "#008066" }}
@@ -132,7 +132,7 @@ export default function RegisterScreen() {
         />
         <Text style={styles.termsText}>
           Ao marcar a caixa, você concorda com nossos{" "}
-          <Text style={styles.termsLink}>Termos e Conditicões</Text>.
+          <Text style={styles.termsLink}>Termos e Condições</Text>.
         </Text>
       </View>
 
@@ -145,14 +145,14 @@ export default function RegisterScreen() {
           <ActivityIndicator color="#fff" />
         ) : (
           <>
-            <Text style={styles.registerText}>Registre-se</Text>
+            <Text style={styles.registerText}>Registrar</Text>
             <MaterialIcons name="arrow-forward" size={20} color="#fff" style={{ marginLeft: 8 }} />
           </>
         )}
       </TouchableOpacity>
 
       <Text style={styles.loginPrompt}>
-        Já é membro? <Text style={styles.loginLink} onPress={ () => router.push("/home")}>Log In</Text>
+        Já possui uma conta? <Text style={styles.loginLink} onPress={() => router.push("/home")}>Entrar</Text>
       </Text>
     </View>
   );

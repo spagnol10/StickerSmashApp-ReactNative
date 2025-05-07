@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,47 +10,59 @@ import {
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-import { mockUser } from "@/mock/mockUser";
-
-const API_URL = 'http://localhost:8080/users'; 
+const API_URL = 'http://localhost:8080/users';
 
 export default function LoginScreen() {
-  const navigation = useNavigation();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
   const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    const loadRememberedEmail = async () => {
+      const storedEmail = await AsyncStorage.getItem("rememberedEmail");
+      if (storedEmail) {
+        setEmail(storedEmail);
+        setRememberMe(true);
+      }
+    };
+    loadRememberedEmail();
+  }, []);
 
   const handleLogin = async () => {
     try {
       const response = await fetch(`${API_URL}/${email}`);
       if (!response.ok) throw new Error("Usuário não encontrado");
-  
+
       const userData = await response.json();
-  
+
       if (userData.password !== password) {
         Alert.alert("Erro", "Senha incorreta");
         return;
       }
-  
-      Alert.alert("Sucesso", "Login bem-sucedido!");
-      router.push("/(tabs)/home"); // Correto com expo-router
-  
-    } catch (error: any) {
-      console.warn("API falhou, usando mock:", error.message);
-      router.push("/(tabs)/home"); // Também funciona com mock
-  
-      if (email === mockUser.email && password === mockUser.password) {
-        Alert.alert("Mock", "Login com mock bem-sucedido!");
+
+      // Salvar ou remover e-mail com base no checkbox
+      if (rememberMe) {
+        await AsyncStorage.setItem("rememberedEmail", email);
       } else {
-        Alert.alert("Erro", "Email ou senha inválidos.");
+        await AsyncStorage.removeItem("rememberedEmail");
       }
+
+      Alert.alert("Sucesso", "Login bem-sucedido!");
+      router.push("/(tabs)/home");
+    } catch (error: any) {
+      console.warn("API falhou:", error.message);
+      router.push("/(tabs)/home");
     }
-  };  
+  };
+
+  const handleForgotPassword = () => {
+    Alert.alert("Recuperação de senha", "Função de recuperação ainda não implementada.");
+    // router.push("/ForgotPasswordScreen") se tiver uma tela
+  };
 
   const handleRegister = () => {
     router.push("/RegisterScreen");
@@ -64,14 +76,14 @@ export default function LoginScreen() {
         resizeMode="contain"
       />
 
-      <Text style={styles.title}>Welcome back</Text>
-      <Text style={styles.subtitle}>sign in to access your account</Text>
+      <Text style={styles.title}>Bem-vindo de volta</Text>
+      <Text style={styles.subtitle}>Faça login para acessar sua conta</Text>
 
       <View style={styles.inputContainer}>
         <FontAwesome name="envelope" size={20} color="#888" />
         <TextInput
           style={styles.input}
-          placeholder="Enter your email"
+          placeholder="Digite seu e-mail"
           placeholderTextColor="#999"
           value={email}
           onChangeText={setEmail}
@@ -82,7 +94,7 @@ export default function LoginScreen() {
         <FontAwesome name="lock" size={20} color="#888" />
         <TextInput
           style={styles.input}
-          placeholder="Password"
+          placeholder="Senha"
           placeholderTextColor="#999"
           secureTextEntry
           value={password}
@@ -92,31 +104,22 @@ export default function LoginScreen() {
 
       <View style={styles.optionsRow}>
         <View style={styles.checkboxContainer}>
-          <BouncyCheckbox
-            size={20}
-            fillColor="#4630EB"
-            unFillColor="#FFFFFF"
-            text="Remember me"
-            iconStyle={{ borderColor: "#4630EB" }}
-            textStyle={styles.checkboxLabel}
-            isChecked={rememberMe}
-            onPress={(checked) => setRememberMe(checked)}
-          />
+    Colocar checkbox para lembrar senha
         </View>
 
-        <TouchableOpacity>
-          <Text style={styles.forgotPassword}>Forgot password?</Text>
+        <TouchableOpacity onPress={handleForgotPassword}>
+          <Text style={styles.forgotPassword}>Esqueceu a senha?</Text>
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginText}>Login</Text>
+        <Text style={styles.loginText}>Entrar</Text>
       </TouchableOpacity>
 
       <Text style={styles.registerPrompt}>
-        Don’t have an account?{" "}
+        Não tem uma conta?{" "}
         <Text style={styles.registerLink} onPress={handleRegister}>
-          Register now
+          Cadastre-se agora
         </Text>
       </Text>
     </View>

@@ -34,7 +34,7 @@ export default function ProductDetailScreen() {
 
   const handleCheckout = () => {
     // Aqui você pode navegar para a tela de checkout ou fazer alguma ação
-    alert("Ir para o checkout");
+    // alert("Ir para o checkout");
     router.push("/pagamento");
   };
 
